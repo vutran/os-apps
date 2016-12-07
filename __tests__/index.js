@@ -16,6 +16,7 @@ describe('os-apps (darwin)', () => {
       'Safari.app',
       'Chrome.app',
       'Firefox.app',
+      'NotAnApp',
     ]);
     const apps = await m.getAll();
     expect(apps.length).toBe(3);

@@ -54,6 +54,22 @@ exports.getAppsInDirectories = dirOrDirs => new Promise((resolve) => {
  */
 exports.getAppsInDirectory = dir => new Promise((resolve) => {
   const results = [];
+  exports.readdir(dir).then((files) => {
+    files.forEach((file) => {
+      results.push(file);
+    });
+    resolve(results);
+  });
+});
+
+/**
+ * Reads the directory recursively to the specified level
+ *
+ * @param {String} dir
+ * @return {Promise<String[]>}
+ */
+exports.readdir = dir => new Promise((resolve) => {
+  const results = [];
   fs.readdir(dir, (err, files) => {
     if (!err) {
       files.forEach((file) => {
