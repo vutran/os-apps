@@ -8,17 +8,46 @@ const APP_DIRS = {
     system: path.join('/', 'Applications'),
   },
   win32: {
-    // TODO
+    user: null,
+    system: [
+      // TODO: verify on win32 systems
+      process.env.ProgramFiles,
+      process.env['ProgramFiles(x86)'],
+    ],
   },
   linux: {
-    // TODO
+    user: path.join('/', 'usr', 'share'),
+    system: path.join('/', 'usr', 'share'),
   },
 };
 
 /**
+ * Retrieves all apps in the given directory/directories
+ *
+ * @param {String|String[]} dirOrDirs - A directory or a list of directories to read
+ * @return {Promise<string>} - Array of app paths
+ */
+exports.getAppsInDirectories = (dirOrDirs) => new Promise((resolve) => {
+  const results = [];
+  let dirsToRead = [];
+  if (typeof dirOrDirs === 'string') {
+    dirsToRead.push(dirOrDirs);
+  }
+  // read all directories (collect all promises)
+  dirsToRead.forEach((dir) => {
+    results.push(exports.getAppsInDirectory(dir));
+  });
+  Promise.all(results)
+    .then(dirResults => {
+      const flatResults = dirResults.reduce((a, b) => a.concat(b), []);
+      resolve(flatResults);
+    });
+});
+
+/**
  * Retrieves all apps in the given directory
  *
- * @param {String} dir - The directory to read
+ * @param {String} dir - A directory to read
  * @return {Promise<string>} - Array of app paths
  */
 exports.getAppsInDirectory = dir => new Promise((resolve) => {
@@ -49,4 +78,4 @@ exports.getAppsInDirectory = dir => new Promise((resolve) => {
  * @param {String} - The use type
  * @return {Promise<string>} - An array of app paths
  */
-exports.getAll = (useType = 'system') => exports.getAppsInDirectory(APP_DIRS[process.platform][useType]);
+exports.getAll = (useType = 'system') => exports.getAppsInDirectories(APP_DIRS[process.platform][useType]);
