@@ -27,18 +27,20 @@ const APP_DIRS = {
  * @param {String|String[]} dirOrDirs - A directory or a list of directories to read
  * @return {Promise<string>} - Array of app paths
  */
-exports.getAppsInDirectories = (dirOrDirs) => new Promise((resolve) => {
+exports.getAppsInDirectories = dirOrDirs => new Promise((resolve) => {
   const results = [];
   let dirsToRead = [];
   if (typeof dirOrDirs === 'string') {
     dirsToRead.push(dirOrDirs);
+  } else {
+    dirsToRead = dirOrDirs;
   }
   // read all directories (collect all promises)
   dirsToRead.forEach((dir) => {
     results.push(exports.getAppsInDirectory(dir));
   });
   Promise.all(results)
-    .then(dirResults => {
+    .then((dirResults) => {
       const flatResults = dirResults.reduce((a, b) => a.concat(b), []);
       resolve(flatResults);
     });
