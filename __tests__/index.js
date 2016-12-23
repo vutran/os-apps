@@ -2,6 +2,20 @@ import m from '../';
 
 jest.mock('fs');
 
+describe('os-apps', () => {
+  it('should get apps in directories', async () => {
+    require('fs').__setDirectoryFiles([
+      'foo.app',
+    ]);
+    const dirs = [
+      'foo',
+    ];
+    const apps = await m.getAppsInDirectories(dirs);
+    expect(apps.length).toBe(1);
+    expect(apps).toContain('foo/foo.app');
+  });
+});
+
 describe('os-apps (darwin)', () => {
   beforeAll(() => {
     // mocks the platform
