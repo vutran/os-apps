@@ -1,7 +1,7 @@
 {
   "name": "os-apps",
   "version": "0.0.0",
-  "description": "",
+  "description": "Retrieve apps available on your OS.",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js __mocks__ __tests__",
