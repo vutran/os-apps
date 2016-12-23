@@ -4,6 +4,7 @@ jest.mock('fs');
 
 describe('os-apps', () => {
   it('should get apps in directories', async () => {
+    // eslint-disable-next-line global-require, no-underscore-dangle
     require('fs').__setDirectoryFiles([
       'foo.app',
     ]);
