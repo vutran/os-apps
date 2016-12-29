@@ -62,3 +62,30 @@ describe('os-apps (linux)', () => {
     expect(apps).not.toContain('/usr/share/Safari.desktop');
   });
 });
+
+describe('os-apps (win32)', () => {
+  beforeAll(() => {
+    // mocks the platform
+    Object.defineProperty(process, 'platform', {
+      value: 'win32',
+    });
+    Object.defineProperty(process.env, 'ProgramFiles', {
+      value: 'C:\\Program Files',
+    });
+    Object.defineProperty(process.env, 'ProgramFiles(x86)', {
+      value: 'C:\\rogram Files (x86)',
+    });
+  });
+  it('should retrieve windows system apps', async () => {
+    // eslint-disable-next-line global-require, no-underscore-dangle
+    require('fs').__setDirectoryFiles([
+      'Chrome.exe',
+      'Firefox.exe',
+      'MSIE.exe',
+    ]);
+    const apps = await m.getAll();
+    expect(apps.length).toBe(6);
+    expect(apps).toContain('C:\\Program Files/Chrome.exe');
+    expect(apps).not.toContain('C:\\Progrm Files/Safari.exe');
+  });
+});
