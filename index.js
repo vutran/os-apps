@@ -44,8 +44,11 @@ exports.getAppsInDirectory = dir => new Promise((resolve) => {
         const file = files[i];
         // set a flag to determine skipping a file
         let skipFile = false;
-        // darwin systems should only return .app extensions
         if (process.platform === 'darwin' && path.extname(file) !== '.app') {
+          // darwin systems should only return .app extensions
+          skipFile = true;
+        } else if (process.platform === 'linux' && path.extname(file) !== '.desktop') {
+          // linux systems should only return .desktop extensions
           skipFile = true;
         }
         if (!skipFile) {
@@ -84,7 +87,7 @@ exports.getAll = (useType = 'system') => {
       };
       break;
     case 'linux':
-      const usrSharePath = path.join('/', 'usr', 'share');
+      const usrSharePath = path.join('/', 'usr', 'share', 'applications');
       dirs = {
         user: usrSharePath,
         system: [

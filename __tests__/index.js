@@ -54,12 +54,13 @@ describe('os-apps (linux)', () => {
     require('fs').__setDirectoryFiles([
       'Chrome.desktop',
       'Firefox.desktop',
+      'InvalidFile',
     ]);
     const apps = await m.getAll();
     expect(apps.length).toBe(2);
-    expect(apps).toContain('/usr/share/Chrome.desktop');
-    expect(apps).toContain('/usr/share/Firefox.desktop');
-    expect(apps).not.toContain('/usr/share/Safari.desktop');
+    expect(apps).toContain('/usr/share/applications/Chrome.desktop');
+    expect(apps).toContain('/usr/share/applications/Firefox.desktop');
+    expect(apps).not.toContain('/usr/share/applications/Safari.desktop');
   });
 });
 
